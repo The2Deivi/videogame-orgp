@@ -36,7 +36,7 @@ export class ClanController {
     if (error) return res.status(422).json({ message: error })
 
     this.clanService.addMemberToClan(+playerReceiverId, joinMemberDTO!)
-      .then(resp => res.status(200).json(resp))
+      .then(resp => res.status(200).json({ message: 'Member added to clan ✌️', data: resp }))
       .catch(error => this.handleError(error, res))
   }
 }
