@@ -32,7 +32,7 @@ export class PlayerService {
       where: {
         id
       },
-      relations: ['user'],
+      relations: ['user', 'clanMembers'],
       select: {
         user: {
           id: true,
