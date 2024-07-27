@@ -1,7 +1,7 @@
 
 
 import { Request, Response } from "express"
-import { CustomError, JoinMember } from "../../domain"
+import { CreateClanDTO, CustomError, JoinMember } from "../../domain"
 import { ClanService } from "../services/clan.service"
 
 
@@ -18,6 +18,16 @@ export class ClanController {
 
     console.log(error)
     return res.status(500).json({ message: 'Something went very wrong' })
+  }
+
+  createClan = async (req: Request, res: Response) => {
+    const [error, createClanDTO] = CreateClanDTO.create(req.body)
+    if (error) return res.status(422).json({ message: error })
+
+
+    this.clanService.createClan(createClanDTO!)
+      .then(resp => res.status(200).json(resp))
+      .catch(error => this.handleError(error, res))
   }
 
   addMemberClan = async (req: Request, res: Response) => {

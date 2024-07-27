@@ -4,6 +4,7 @@ import { ClanController } from "./controller";
 import { ClanService } from "../services/clan.service";
 import { PlayerService } from "../services/player.service";
 import { UserService } from "../services/user.service";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 
 export class ClanRoute {
@@ -14,9 +15,10 @@ export class ClanRoute {
     const userService = new UserService()
     const playerService = new PlayerService(userService)
     const clanService = new ClanService(playerService)
-    const controller = new ClanController(clanService)
+    const clanController = new ClanController(clanService)
 
-    router.post('/:playerReceiverId/join', controller.addMemberClan)
+    router.post('/', clanController.createClan)
+    router.post('/:playerReceiverId/join', AuthMiddleware.protect, clanController.addMemberClan)
 
     return router
   }

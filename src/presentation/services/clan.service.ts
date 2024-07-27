@@ -1,5 +1,5 @@
-import { ClanMember, ClanMemberRole } from "../../data";
-import { CustomError, JoinMember } from "../../domain";
+import { Clan, ClanMember, ClanMemberRole } from "../../data";
+import { CreateClanDTO, CustomError, JoinMember } from "../../domain";
 import { PlayerService } from "./player.service";
 
 
@@ -9,6 +9,18 @@ export class ClanService {
   constructor(
     private readonly playerService: PlayerService
   ) { }
+
+  async createClan(createClanDTO: CreateClanDTO) {
+
+    const clan = new Clan();
+    clan.name = createClanDTO.name;
+
+    try {
+      return await clan.save()
+    } catch (error) {
+      throw CustomError.internalServer("Something went wrong")
+    }
+  }
 
   async addMemberToClan(playerReceiverId: number, joinMemberDTO: JoinMember) {
     const playerReceiverPromise = this.playerService.findOnePlayer(playerReceiverId);
