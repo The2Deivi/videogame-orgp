@@ -12,9 +12,9 @@ export class UserRoutes {
     const userService = new UserService();
     const userController = new UserController(userService);
 
-    // router.get('/:id', UserController.findOneUser)
-    // router.post('/', UserController.login)
-    // router.post('/register', UserController.register)
+    router.get('/:id', userController.findOneUser)
+    router.post('/login', userController.login)
+    router.post('/register', userController.register)
 
     return router;
   }
