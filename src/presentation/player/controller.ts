@@ -37,6 +37,14 @@ export class PlayerController {
       .catch(error => this.handleError(error, res));
   }
 
+  getPlayernventory = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    this.inventoryService.getPlayerInventory(+id)
+      .then((resp) => res.status(200).json(resp))
+      .catch(error => this.handleError(error, res));
+  }
+
   addItemToInventory = async (req: Request, res: Response) => {
     const { id: playerId } = req.params;
     const [error, addItemToInventoryDTO] = AddItemToInventory.create(req.body);

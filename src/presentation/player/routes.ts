@@ -21,6 +21,7 @@ export class PlayerRoutes {
     router.post('/', playerController.createPlayer);
     router.get('/:id', playerController.findOnePlayer);
 
+    router.get('/:id/inventory', playerController.getPlayernventory);
     router.post('/:id/inventory/items', playerController.addItemToInventory);
 
     return router;

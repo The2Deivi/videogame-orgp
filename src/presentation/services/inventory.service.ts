@@ -107,4 +107,14 @@ export class InventoryService {
       throw CustomError.internalServer("Something went wrong")
     }
   }
+
+  async getPlayerInventory(playerId: number) {
+    const items = await this.findOneInventoryByPlayerId(playerId);
+    const resources = await this.findOneInventoryByPlayerId(playerId);
+
+    return {
+      items,
+      resources
+    }
+  }
 }
