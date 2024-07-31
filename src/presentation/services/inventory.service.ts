@@ -1,7 +1,8 @@
-import { Inventory, Player } from "../../data";
+import { Inventory, Player, Resource } from "../../data";
 import { Inventory_item } from "../../data/postgres/models/inventoryItem.model";
 import { Inventory_resource } from "../../data/postgres/models/inventoryResource.model";
 import { AddItemToInventory, CustomError } from "../../domain";
+import { AddResourceToInventory } from "../../domain/dtos/inventory/add-resource-inventory.dto";
 import { ItemService } from "./item.service";
 import { ResourceService } from "./resource.service";
 
@@ -11,6 +12,42 @@ export class InventoryService {
     private readonly itemService: ItemService,
     private readonly resourceService: ResourceService
   ) { }
+
+  async addResourceToInventory(playerId: number, addResourceToInventoryDTO: AddResourceToInventory) {
+    const inventory = await Inventory.findOne({
+      where: {
+        player: { id: playerId }
+      },
+      relations: ['resource', 'player'],
+      select: {
+        id: true,
+        player: {
+          id: true,
+          name: true,
+          level: true,
+          experience: true,
+          health: true,
+          energy: true
+        }
+      }
+
+    });
+    if (!inventory) throw CustomError.notFound('Inventory not found 😭');
+
+    const resource = await Resource.findOne({ where: { id: addResourceToInventoryDTO.resourceId } });
+    if (!resource) throw CustomError.notFound('Resource not found 😭');
+
+    const inventory_resource = new Inventory_resource();
+    inventory_resource.resource = resource;
+    inventory_resource.quantity = addResourceToInventoryDTO.quantity;
+    inventory_resource.inventory = inventory;
+
+    try {
+      await inventory_resource.save()
+    } catch (error) {
+      throw CustomError.internalServer("Something went wrong")
+    }
+  }
 
   async addItemToInventory(id: number, addItemToInventoryDTO: AddItemToInventory) {
     const inventory = await this.findOneInventoryByPlayerId(id)

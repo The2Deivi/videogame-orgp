@@ -18,7 +18,8 @@ export class ClanRoute {
     const clanController = new ClanController(clanService)
 
     router.post('/', clanController.createClan)
-    router.post('/:playerReceiverId/join', AuthMiddleware.protect, clanController.addMemberClan)
+    router.post('/:playerReceiverId/join', clanController.addMemberClan)
+    router.get('/:id/members', clanController.getClanMembers)
 
     return router
   }

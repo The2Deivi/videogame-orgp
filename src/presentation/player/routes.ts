@@ -23,6 +23,8 @@ export class PlayerRoutes {
 
     router.get('/:id/inventory', playerController.getPlayernventory);
     router.post('/:id/inventory/items', playerController.addItemToInventory);
+    router.post('/:id/inventory/resources', playerController.addResourceToInventory);
+    router.get('/:id/construction', playerController.getPlayerConstructions);
 
     return router;
   }

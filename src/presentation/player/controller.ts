@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AddItemToInventory, CustomError } from "../../domain";
+import { AddItemToInventory, AddResourceToInventory, CustomError } from "../../domain";
 import { PlayerService } from "../services/player.service";
 import { CreatePlayerDTO } from "../../domain/dtos/player/create-player.dto";
 import { InventoryService } from "../services/inventory.service";
@@ -51,6 +51,22 @@ export class PlayerController {
     if (error) return res.status(422).json({ message: error });
 
     this.inventoryService.addItemToInventory(+playerId, addItemToInventoryDTO!)
+      .then((resp) => res.status(200).json(resp))
+      .catch(error => this.handleError(error, res));
+  }
+
+  getPlayerConstructions = async (req: Request, res: Response) => {
+    const { id: playerId } = req.params;
+    this.playerService.getPlayerConstructions(+playerId)
+      .then((resp) => res.status(200).json(resp))
+      .catch(error => this.handleError(error, res));
+  }
+
+  addResourceToInventory = async (req: Request, res: Response) => {
+    const { id: playerId } = req.params;
+    const [error, addResourceToInventoryDTO] = AddResourceToInventory.create(req.body);
+    if (error) return res.status(422).json({ message: error });
+    this.inventoryService.addResourceToInventory(+playerId, addResourceToInventoryDTO!)
       .then((resp) => res.status(200).json(resp))
       .catch(error => this.handleError(error, res));
   }

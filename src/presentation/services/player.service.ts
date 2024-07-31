@@ -1,3 +1,4 @@
+import { Construction } from "../../data";
 import { Player } from "../../data/postgres/models/player.model";
 import { CustomError } from "../../domain";
 import { CreatePlayerDTO } from "../../domain/dtos/player/create-player.dto";
@@ -57,6 +58,29 @@ export class PlayerService {
     if (player) throw CustomError.badRequest('This name is already taken 😭');
 
     return player;
+  }
+
+  async getPlayerConstructions(playerId: number) {
+
+    const player = await Player.findOne({
+      where: {
+        id: playerId
+      },
+      relations: ['constructions'],
+      select: {
+        id: true,
+        constructions: {
+          id: true,
+          name: true,
+          level: true
+        }
+      }
+    });
+
+    if (!player) throw CustomError.notFound('Player not found 😭');
+
+
+    return player.constructions;
   }
 
 }

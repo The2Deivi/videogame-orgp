@@ -39,4 +39,12 @@ export class ClanController {
       .then(resp => res.status(200).json({ message: 'Member added to clan ✌️', data: resp }))
       .catch(error => this.handleError(error, res))
   }
+
+  getClanMembers = async (req: Request, res: Response) => {
+    const { id: clanId } = req.params
+
+    this.clanService.getClanMembers(+clanId)
+      .then(members => res.status(200).json(members))
+      .catch(error => this.handleError(error, res))
+  }
 }

@@ -11,6 +11,9 @@ export class Clan extends BaseEntity {
   @OneToMany(() => ClanMember, (clanMember) => clanMember.clan)
   clanMembers: ClanMember[]
 
+  @OneToMany(() => ClanMember, member => member.clan)
+  members: ClanMember[]
+
   @Column('varchar', {
     length: 100,
     nullable: false,
